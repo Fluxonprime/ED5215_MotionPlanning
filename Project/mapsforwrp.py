@@ -5,6 +5,8 @@ import search
 start_id = 1
 obstacle_id = 16
 fringe_id = 4
+free_space_id1 = 3
+free_space_id2 = 18
 expanded_id = 6
 
 
@@ -115,6 +117,37 @@ class Maps:
                 error += dx
                 y += sy
         return True
+    
+    four_neighbor_actions = {'up':[-1, 0], 'down':[1, 0], 'left': [0, -1], 'right': [0, 1]}
+    
+    def getSuccessors(self, state):
+     """
+       state: Search state
+     
+     For a given state, this should return a list of triples, 
+     (successor, action, stepCost), where 'successor' is a 
+     successor to the current state, 'action' is the action
+     required to get there, and 'stepCost' is the incremental 
+     cost of expanding to that successor
+     """
+     
+     successors = []
+     for action in self.four_neighbor_actions:
+         
+         #Get indiivdual action
+         del_x, del_y = self.four_neighbor_actions.get(action)
+         
+         #Get successor
+         new_successor = [state[0] + del_x , state[1] + del_y]
+         new_action = action
+         
+         # Check for obstacle 
+         if self.maze_map.map_data[new_successor[0]][new_successor[1]] == obstacle_id:
+             continue 
+         
+         new_cost = len(state[3])+1    
+         successors.append([new_successor, new_action, new_cost])
+     return successors
 
 #Maze maps
 map_1 = Maps()
